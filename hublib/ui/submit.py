@@ -209,6 +209,7 @@ class Submit(object):
 
         if self.cachename:
             self.rdir = os.path.join(Submit.CACHEDIR, self.cachename, runname)
+            self.ctabdir = os.path.join(Submit.CACHETABDIR, self.cachename, runname)
         else:
             self.rdir = runname
 
@@ -386,7 +387,14 @@ class Submit(object):
                 f.write(pretty_time_delta(etime))
             with open(os.path.join(self.rdir, '.output'), 'w') as f:
                 f.write(self.output.value)
-
+            # Copy metadata.json to rundir    
+            metadirfile = os.path.join(self.ctabdir,'metadir')
+            if os.path.exists(metadirfile):
+                with open(metadirfile,'r') as f:
+                    metadir = f.read()
+            metafile = os.path.join(metadir,'metadata.json')        
+            if os.path.exists(metafile):
+                shutil.copy2(metafile,os.path.join(self.rdir,'.metadata.json'))
         return self.rdir
 
 
