@@ -98,6 +98,15 @@ class Submit(object):
                     fname = str(uuid.uuid4()).replace('-', '')
                     if not os.path.isdir(os.path.join(cachedir, fname)):
                         break
+                # Use the fname hash to reference the joblib/Memory.cache        
+                this_cachetabdir = os.path.join(cachetabdir, fname)
+                if not os.path.exists(this_cachetabdir):
+                    os.makedirs(this_cachetabdir)
+                # Get the joblib memory cache location and save it in the fname location
+                outdir, _ = make_rname._get_output_dir(*args)
+                with open(os.path.join(this_cachetabdir, 'metadir'), 'w') as f:
+                    f.write(outdir)
+
                 return fname
 
             self.make_rname = make_rname
